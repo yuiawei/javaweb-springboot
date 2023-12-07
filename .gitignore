@@ -1,6 +1,13 @@
 # Compiled class file
 *.class
 
+#idea
+.idea/
+target/
+
+#nodejs
+node_modules/
+
 # Log file
 *.log
 
