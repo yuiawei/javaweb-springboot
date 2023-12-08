@@ -1,49 +1,51 @@
 <template>
-<div class="app-container">
-  <el-card class="box-card">
-    <div slot="header" class="clearfix">
-      <span>JWT信息</span>
-      <el-button style="float: right;" type="danger" @click="clearToken">清除token</el-button>
-    </div>
-    <div class="text item">
-      <el-descriptions class="margin-top" direction="vertical" :column="3" border>
-        <el-descriptions-item label="Header">{{personInfo.header}}</el-descriptions-item>
-        <el-descriptions-item label="Payload">{{personInfo.payload}}</el-descriptions-item>
-        <el-descriptions-item label="Signature">{{personInfo.signature}}</el-descriptions-item>
-      </el-descriptions>
-    </div>
-  </el-card>
-</div>
+  <div>
+    <el-descriptions class="margin-top" title="个人中心" :column="2" border>
+      <template slot="extra">
+        <el-button type="danger" @click="userLogout">退出登录</el-button>
+      </template>
+      <el-descriptions-item label="ID">{{userInfo.id}}</el-descriptions-item>
+      <el-descriptions-item label="用户名">{{userInfo.username}}</el-descriptions-item>
+      <el-descriptions-item label="email">{{userInfo.email}}</el-descriptions-item>
+      <el-descriptions-item label="手机号">{{userInfo.mobile}}</el-descriptions-item>
+      <el-descriptions-item label="性别">{{userInfo.sex === "0" ? "男" : "女"}}</el-descriptions-item>
+      <el-descriptions-item label="状态">{{userInfo.status}}</el-descriptions-item>
+    </el-descriptions>
+  </div>
 </template>
 <script>
-import {getPersonInfo} from "@/api/person";
+import {getUserByUsername} from "@/api/user";
+import {logout} from "@/api/login";
 import {removeToken} from "@/utils/auth";
 
 export default {
   name: "PersonCenter",
   data() {
     return {
-      username: "",
-      personInfo: {}
+      userInfo: {},
+      username: null
     }
   },
   created() {
     this.username = this.$route.query.username;
-    this.getPerson();
+    this.getUserInfo();
   },
   methods: {
-    getPerson() {
-      getPersonInfo(this.username).then(response => {
-        this.personInfo = response;
+    userLogout() {
+      logout().then(response => {
+        removeToken();
+        this.getUserInfo();
       })
     },
-    clearToken() {
-      removeToken();
-      this.getPerson();
+    getUserInfo() {
+      getUserByUsername(this.username).then(response => {
+        this.userInfo = response.data;
+      })
     }
   }
 }
 </script>
+
 <style scoped>
 
 </style>

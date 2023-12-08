@@ -30,7 +30,7 @@ export default defineConfig({
         https: false,
         proxy: {
             "/dev-api": {
-                target: "http://localhost:8080",//代理到的服务器地址
+                target: "http://localhost:8081",//代理到的服务器地址
                 changeOrigin: true,//用于控制请求头中的值,
                 rewrite: path => path.replace(/^\/dev-api/, '')
             }

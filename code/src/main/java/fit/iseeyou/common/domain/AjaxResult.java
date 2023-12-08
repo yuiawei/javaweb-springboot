@@ -1,5 +1,7 @@
 package fit.iseeyou.common.domain;
 
+import cn.hutool.http.HttpStatus;
+
 import java.io.Serializable;
 import java.util.HashMap;
 
@@ -93,7 +95,7 @@ public class AjaxResult extends HashMap<String, Object> implements Serializable 
      * @return 成功消息
      */
     public static AjaxResult success(String msg, Object data) {
-        return new AjaxResult(HttpStatus.SUCCESS, msg, data);
+        return new AjaxResult(HttpStatus.HTTP_OK, msg, data);
     }
 
     /**
@@ -134,7 +136,7 @@ public class AjaxResult extends HashMap<String, Object> implements Serializable 
      * @return 警告消息
      */
     public static AjaxResult error(String msg, Object data) {
-        return new AjaxResult(HttpStatus.ERROR, msg, data);
+        return new AjaxResult(HttpStatus.HTTP_INTERNAL_ERROR, msg, data);
     }
 
 }

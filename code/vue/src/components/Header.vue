@@ -4,7 +4,8 @@
       <h1 class="title">linxi blog</h1>
     </div>
     <div class="person">
-      <img :src="require('@/assets/image/bilibili.png')" alt="avatar"/>
+<!--      <img :src="require('@/assets/image/bilibili.png')" alt="avatar"/>-->
+      <el-button style="margin: 10px" type="primary" @click="toLogin">登录</el-button>
     </div>
   </header>
 </template>
@@ -12,6 +13,9 @@
 export default {
   name: "Header",
   methods: {
+    toLogin() {
+      this.$router.push("/login");
+    }
   }
 }
 </script>

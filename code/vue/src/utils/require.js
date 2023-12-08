@@ -1,6 +1,6 @@
 import axios from "axios";
 import {getToken} from '@/utils/auth'
-import {MessageBox} from "element-ui";
+import {MessageBox, Message} from "element-ui";
 
 let baseUrl = "/dev-api"
 const request = axios.create({
@@ -23,15 +23,21 @@ request.interceptors.request.use(config => {
 
 // 响应拦截器
 request.interceptors.response.use(response => {
-    if (response.data.code && response.data.code === 401) {
-        MessageBox.alert(
-            response.data.msg,
-            "提示",
-            {type: "warning"}
-        ).then(r => {
-            console.log("跳转登录页面")
-            location.href = "/demo-vue/#/login10";
-        });
+    let data = response.data
+    if (data.code && data.code !== 200) {
+        if (data.code === 401) {
+            MessageBox.alert(
+                response.data.msg,
+                "提示",
+                {type: "warning"}
+            ).then(r => {
+                console.log("跳转登录页面")
+                location.href = "/demo-vue/#/login";
+            });
+        } else {
+            Message.error(data.msg);
+        }
+
     }
     return Promise.resolve(response.data);
 })
