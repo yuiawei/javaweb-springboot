@@ -9,8 +9,7 @@ import cn.hutool.jwt.signers.JWTSigner;
 import cn.hutool.jwt.signers.JWTSignerUtil;
 import fit.iseeyou.common.domain.AjaxResult;
 import fit.iseeyou.common.utils.RedisUtils;
-import fit.iseeyou.config.security.MyUserDetails;
-import fit.iseeyou.web.domain.EbSysUserDomain;
+import fit.iseeyou.web.domain.EbLoginUserDomain;
 import fit.iseeyou.web.domain.vo.LoginReqVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,7 +18,6 @@ import org.springframework.security.authentication.AuthenticationServiceExceptio
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -29,7 +27,6 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 @RestController
-@RequestMapping("/user")
 public class EbLoginController {
     @Value("${custom.jwt.key}")
     private String key;
@@ -38,7 +35,7 @@ public class EbLoginController {
     @Autowired
     private RedisUtils redisUtils;
 
-    @GetMapping("/image")
+    @GetMapping("/vcImage")
     public AjaxResult image() {
         UUID uuid = UUID.randomUUID();
         LineCaptcha captcha = CaptchaUtil.createLineCaptcha(250, 80, 4, 10);
@@ -52,25 +49,16 @@ public class EbLoginController {
         return AjaxResult.success(data);
     }
 
-    @PostMapping("/login")
+    @PostMapping("/doLogin")
     public AjaxResult login(@RequestBody LoginReqVO reqVO) {
-        String uuid = reqVO.getUuid();
-        String verifyCode = reqVO.getVerifyCode();
-        Object cacheObject = redisUtils.getCacheObject("ebao:image-code:" + uuid);
-        if (Objects.isNull(cacheObject)) {
-            return AjaxResult.error("验证码已过期");
-        }
-        if (!verifyCode.equals(cacheObject.toString())) {
-            return AjaxResult.error("验证码错误");
-        }
         String username = reqVO.getUsername();
         String password = reqVO.getPassword();
-        UsernamePasswordAuthenticationToken upAuthenticationToken = new UsernamePasswordAuthenticationToken(username, new String(Base64.decode(password)));
-        Authentication authenticate = authenticationManager.authenticate(upAuthenticationToken);
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, new String(Base64.decode(password)));
+        Authentication authenticate = authenticationManager.authenticate(authenticationToken);
         if (Objects.isNull(authenticate)) {
             throw new AuthenticationServiceException("授权服务失败");
         }
-        MyUserDetails principal = (MyUserDetails) authenticate.getPrincipal();
+        EbLoginUserDomain principal = (EbLoginUserDomain) authenticate.getPrincipal();
         // 生成jwt
         Map<String, Object> payload = new HashMap<>();
         payload.put("username", username);
@@ -83,12 +71,12 @@ public class EbLoginController {
         return ajax;
     }
 
-    @GetMapping("/logout")
+    @GetMapping("/doLogout")
     public AjaxResult logout() {
         // 从redis中取出用户信息
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Object username = authentication.getPrincipal();
-        MyUserDetails loginUser = redisUtils.getCacheObject("ebao:login:" + username);
+        EbLoginUserDomain loginUser = redisUtils.getCacheObject("ebao:login:" + username);
         if (Objects.isNull(loginUser)) {
             return AjaxResult.error("退出登录失败，请先登录");
         }

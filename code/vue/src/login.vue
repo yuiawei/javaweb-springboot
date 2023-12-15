@@ -49,7 +49,7 @@ import {setToken} from "@/utils/auth"
 import {Base64} from "js-base64";
 
 export default {
-  name: "Login10",
+  name: "Login",
   data() {
     return {
       loginForm: {

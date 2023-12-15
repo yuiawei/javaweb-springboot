@@ -1,5 +1,8 @@
 package fit.iseeyou.web.domain;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -10,12 +13,14 @@ import java.time.LocalDateTime;
  * @author Zhang Wenxu
  */
 @Data
+@TableName("sys_menu")
 public class EbSysMenuDomain implements Serializable {
     public static final Long SerialVersionUID = 1L;
 
     /**
      * ID
      */
+    @TableId(type = IdType.AUTO)
     private Long id;
 
     /**

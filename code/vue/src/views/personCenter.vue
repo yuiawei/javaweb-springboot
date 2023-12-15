@@ -28,7 +28,7 @@ export default {
   },
   created() {
     this.username = this.$route.query.username;
-    this.getUserInfo();
+    // this.getUserInfo();
   },
   methods: {
     userLogout() {

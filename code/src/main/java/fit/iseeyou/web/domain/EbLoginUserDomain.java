@@ -1,32 +1,31 @@
-package fit.iseeyou.config.security;
+package fit.iseeyou.web.domain;
 
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import fit.iseeyou.config.security.custom.SimpleGrantedAuthorityDeserializer;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.List;
 
-@JsonIgnoreProperties({"enabled","accountNonExpired", "accountNonLocked", "credentialsNonExpired", "authorities"})
-public class MyUserDetails implements UserDetails, Serializable {
+@JsonIgnoreProperties({"username", "password", "accountNonExpired", "accountNonLocked", "credentialsNonExpired", "enabled"})
+public class EbLoginUserDomain implements UserDetails, Serializable {
     public static final Long SerialVersionUID = 1L;
 
-    public MyUserDetails() {}
+    private EbSysUserDomain user;
+    private List<EbSysRoleDomain> roles;
+    private List<GrantedAuthority> authorities;
 
-    public MyUserDetails(String username, String password, Collection<? extends GrantedAuthority> authorities) {
-        this.username = username;
-        this.password = password;
-        this.authorities = authorities;
+    public EbLoginUserDomain() {
     }
 
-    @JsonIgnore
-    private String password;
-
-    private String username;
-
-    private Collection<? extends GrantedAuthority> authorities;
+    public EbLoginUserDomain(EbSysUserDomain user, List<EbSysRoleDomain> roles, List<GrantedAuthority> authorities) {
+        this.user = user;
+        this.roles = roles;
+        this.authorities = authorities;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -35,12 +34,12 @@ public class MyUserDetails implements UserDetails, Serializable {
 
     @Override
     public String getPassword() {
-        return password;
+        return user.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return username;
+        return user.getUsername();
     }
 
     @Override

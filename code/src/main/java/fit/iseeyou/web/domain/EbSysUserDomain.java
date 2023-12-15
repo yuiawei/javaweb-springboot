@@ -1,7 +1,11 @@
 package fit.iseeyou.web.domain;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
@@ -17,12 +21,15 @@ import java.time.LocalDateTime;
  * @author ChatGPT3.5
  */
 @Data
+@TableName("sys_user")
+@JsonIgnoreProperties({"createTime", "updateTime", "lastLoginTime", "password"})
 public class EbSysUserDomain implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
      * ID
      */
+    @TableId(type = IdType.AUTO)
     private Long id;
 
     /**

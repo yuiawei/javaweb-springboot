@@ -1,18 +1,17 @@
 package fit.iseeyou.web.mapper;
 
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import fit.iseeyou.web.domain.EbSysRoleDomain;
+import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
-public interface EbSysRoleMapper {
-    EbSysRoleDomain getRoleById(Long id);
-
-    List<EbSysRoleDomain> getList(EbSysRoleDomain role);
-
-    int insertRole(EbSysRoleDomain role);
-
-    int updateRole(EbSysRoleDomain role);
-
-    int deleteRole(Long id);
+@Mapper
+public interface EbSysRoleMapper extends BaseMapper<EbSysRoleDomain> {
+    /**
+     * 根据用户Id获取用户的所有角色
+     * @return 该用户的所有角色
+     */
+    List<EbSysRoleDomain> getRoleByUserId(Long userId);
 }

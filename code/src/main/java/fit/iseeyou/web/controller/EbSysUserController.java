@@ -19,16 +19,4 @@ public class EbSysUserController {
     public String list() {
         return "user list";
     }
-
-    @GetMapping("/{id}")
-    public AjaxResult id(@PathVariable Long id) {
-        EbSysUserDomain user = ebSysUserService.getUserById(id);
-        return AjaxResult.success(user);
-    }
-
-    @GetMapping("/username/{username}")
-    public AjaxResult username(@PathVariable String username) {
-        EbSysUserDomain user = ebSysUserService.getUserByUsername(username);
-        return AjaxResult.success(user);
-    }
 }

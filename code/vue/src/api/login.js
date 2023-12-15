@@ -5,7 +5,7 @@ export function login(username, password, verifyCode, uuid, rememberMe) {
         username, password, verifyCode, uuid, rememberMe
     };
     return require({
-        url: "/user/login",
+        url: "/doLogin",
         headers: {
             isToken: false
         },
@@ -16,7 +16,7 @@ export function login(username, password, verifyCode, uuid, rememberMe) {
 
 export function getVerifyImage() {
     return require({
-        url: '/user/image',
+        url: '/vcImage',
         headers: {
             isToken: false
         },
@@ -27,7 +27,7 @@ export function getVerifyImage() {
 
 export function logout() {
     return require({
-        url: '/user/logout',
+        url: '/doLogout',
         method: 'get'
     })
 }
