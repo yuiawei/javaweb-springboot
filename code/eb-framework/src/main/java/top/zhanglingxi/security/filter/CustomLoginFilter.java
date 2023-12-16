@@ -11,6 +11,8 @@ import org.springframework.security.authentication.AuthenticationServiceExceptio
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.stereotype.Component;
 import top.zhanglingxi.utils.RedisUtils;
@@ -18,6 +20,7 @@ import top.zhanglingxi.utils.RedisUtils;
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.Objects;
 
 @Component
@@ -33,17 +36,32 @@ public class CustomLoginFilter extends UsernamePasswordAuthenticationFilter {
     }
 
     @Override
-    public void setUsernameParameter(@Value("username") String usernameParameter) {
+    @Autowired
+    public void setAuthenticationSuccessHandler(AuthenticationSuccessHandler successHandler) {
+        super.setAuthenticationSuccessHandler(successHandler);
+    }
+
+    @Override
+    @Autowired
+    public void setAuthenticationFailureHandler(AuthenticationFailureHandler failureHandler) {
+        super.setAuthenticationFailureHandler(failureHandler);
+    }
+
+    @Override
+    @Value("username")
+    public void setUsernameParameter(String usernameParameter) {
         super.setUsernameParameter(usernameParameter);
     }
 
     @Override
-    public void setPasswordParameter(@Value("password") String passwordParameter) {
+    @Value("password")
+    public void setPasswordParameter(String passwordParameter) {
         super.setPasswordParameter(passwordParameter);
     }
 
     @Override
-    public void setFilterProcessesUrl(@Value("/doLogin") String filterProcessesUrl) {
+    @Value("/doLogin")
+    public void setFilterProcessesUrl(String filterProcessesUrl) {
         super.setFilterProcessesUrl(filterProcessesUrl);
     }
 
@@ -87,7 +105,7 @@ public class CustomLoginFilter extends UsernamePasswordAuthenticationFilter {
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
             setDetails(request, authenticationToken);
             return getAuthenticationManager().authenticate(authenticationToken);
-        } catch (Exception e) {
+        } catch (IOException e) {
             throw new AuthenticationServiceException("读取请求体中的数据失败");
         }
     }

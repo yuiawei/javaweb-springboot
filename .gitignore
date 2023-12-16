@@ -4,6 +4,7 @@
 #idea
 .idea/
 target/
+test/
 
 #nodejs
 node_modules/
