@@ -1,6 +1,7 @@
 package top.zhanglingxi.aop;
 
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -15,11 +16,11 @@ import top.zhanglingxi.domain.vo.LoginReqVO;
 import top.zhanglingxi.mapper.EbSysLoginLogMapper;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.Objects;
 
 @Aspect
 @Component
+@Slf4j
 public class LogAspect {
     @Autowired
     private EbSysLoginLogMapper ebSysLoginLogMapper;
@@ -40,8 +41,8 @@ public class LogAspect {
                 ebSysLoginLogDomain.setRequestData(JSONObject.toJSONString(reqVO));
                 ebSysLoginLogDomain.setLoginStatus(Integer.parseInt(ajaxResult.get("code").toString()) == 200 ? 1 : 0);
                 ebSysLoginLogDomain.setLoginTime(LocalDateTime.now());
+                log.info("新增登录日志，日志信息 = {}", ebSysLoginLogDomain);
                 ebSysLoginLogMapper.insert(ebSysLoginLogDomain);
-
                 return res;
             }
             throw new RuntimeException("请求/doLogin接口，响应数据异常");
