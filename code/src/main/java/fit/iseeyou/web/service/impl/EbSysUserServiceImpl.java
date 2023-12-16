@@ -1,5 +1,6 @@
 package fit.iseeyou.web.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import fit.iseeyou.web.domain.EbSysUserDomain;
 import fit.iseeyou.web.mapper.EbSysUserMapper;
 import fit.iseeyou.web.service.IEbSysUserService;
@@ -14,4 +15,9 @@ public class EbSysUserServiceImpl implements IEbSysUserService {
     private EbSysUserMapper ebSysUserMapper;
 
 
+    @Override
+    public List<EbSysUserDomain> getList(EbSysUserDomain user) {
+        QueryWrapper<EbSysUserDomain> qw = new QueryWrapper<>();
+        return ebSysUserMapper.selectList(qw);
+    }
 }

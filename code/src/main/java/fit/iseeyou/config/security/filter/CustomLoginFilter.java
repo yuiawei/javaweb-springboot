@@ -3,14 +3,13 @@ package fit.iseeyou.config.security.filter;
 import cn.hutool.core.io.FastByteArrayOutputStream;
 import cn.hutool.core.io.IoUtil;
 import com.alibaba.fastjson.JSONObject;
-import fit.iseeyou.common.domain.AjaxResult;
 import fit.iseeyou.common.utils.RedisUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -31,6 +30,21 @@ public class CustomLoginFilter extends UsernamePasswordAuthenticationFilter {
     @Lazy
     public void setAuthenticationManager(AuthenticationManager authenticationManager) {
         super.setAuthenticationManager(authenticationManager);
+    }
+
+    @Override
+    public void setUsernameParameter(@Value("username") String usernameParameter) {
+        super.setUsernameParameter(usernameParameter);
+    }
+
+    @Override
+    public void setPasswordParameter(@Value("password") String passwordParameter) {
+        super.setPasswordParameter(passwordParameter);
+    }
+
+    @Override
+    public void setFilterProcessesUrl(@Value("/doLogin") String filterProcessesUrl) {
+        super.setFilterProcessesUrl(filterProcessesUrl);
     }
 
     @Override

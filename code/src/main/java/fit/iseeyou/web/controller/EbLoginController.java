@@ -81,7 +81,6 @@ public class EbLoginController {
             return AjaxResult.error("退出登录失败，请先登录");
         }
         redisUtils.deleteObject("ebao:login:" + username);
-        SecurityContextHolder.getContext().setAuthentication(null);
         return AjaxResult.success("退出登录成功");
     }
 }

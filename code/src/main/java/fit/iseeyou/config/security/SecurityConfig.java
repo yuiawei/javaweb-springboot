@@ -1,6 +1,7 @@
 package fit.iseeyou.config.security;
 
 import fit.iseeyou.config.security.custom.CustomAuthenticationEntryPoint;
+import fit.iseeyou.config.security.custom.CustomLogoutSuccessHandler;
 import fit.iseeyou.config.security.custom.CustomPersistentTokenBasedRememberMeServices;
 import fit.iseeyou.config.security.filter.CustomJwtFilter;
 import fit.iseeyou.config.security.filter.CustomLoginFilter;
@@ -8,6 +9,7 @@ import fit.iseeyou.config.security.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -17,6 +19,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.rememberme.InMemoryTokenRepositoryImpl;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.OrRequestMatcher;
 
 import java.util.UUID;
 
@@ -29,6 +33,8 @@ public class SecurityConfig {
     private CustomJwtFilter customJwtFilter;
     @Autowired
     private CustomLoginFilter customLoginFilter;
+    @Autowired
+    private CustomLogoutSuccessHandler customLogoutSuccessHandler;
     @Autowired
     private AuthenticationConfiguration authenticationConfiguration;
 
@@ -43,7 +49,11 @@ public class SecurityConfig {
                 .formLogin()
                 .and()
                 .logout()
-                .logoutUrl("/doLogout")
+//                .logoutUrl("/doLogout")
+                .logoutRequestMatcher(new OrRequestMatcher(
+                        new AntPathRequestMatcher("/doLogout", HttpMethod.GET.name())
+                ))
+                .logoutSuccessHandler(customLogoutSuccessHandler)
                 .and()
                 .addFilterAt(customLoginFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(customJwtFilter, UsernamePasswordAuthenticationFilter.class)
