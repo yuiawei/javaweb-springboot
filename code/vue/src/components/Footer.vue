@@ -10,8 +10,6 @@ export default {
 </script>
 <style scoped>
 footer {
-  position: absolute;
-  bottom: 0;
   width: 100%;
   height: 40px;
   font: 14px/40px Consolas,Sans-serif;

@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import Layout from "@/views/layout.vue";
 
 Vue.use(VueRouter)
 
@@ -8,18 +9,32 @@ const router = new VueRouter({
   base: import.meta.env.BASE_URL,
   routes: [
     {
-      path: "/",
-      redirect: '/index'
-    },
-    {
-      path: "/index",
-      name: "index",
-      component: () => import("@/index.vue")
-    },
-    {
       path: "/login",
       name: "login",
       component: () => import("@/login.vue")
+    },
+    {
+      path: "",
+      component: Layout,
+      redirect: 'index',
+      children: [
+        {
+          path: "index",
+          name: "Index",
+          component: () => import("@/index.vue")
+        },
+        {
+          path: "job-hunt",
+          name: "JobHunt",
+          component: () => import("@/views/jobHunt.vue")
+        },
+        {
+          path: "resume",
+          name: "Resume",
+          component: () => import("@/views/Resume.vue")
+        }
+      ]
+
     },
     {
       path: "/person-center",

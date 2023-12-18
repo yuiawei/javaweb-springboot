@@ -1,20 +1,49 @@
 <template>
   <header>
     <div>
-      <h1 class="title">linxi blog</h1>
+      <el-image style="width: 60px; height: 60px;margin: 0 10px" :src="require('@/assets/image/eb.png')" fit="fill"></el-image>
+      <el-menu style="display: inline-block" :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
+        <el-menu-item index="1">首页</el-menu-item>
+        <el-menu-item index="2">求职</el-menu-item>
+        <el-menu-item index="3">简历</el-menu-item>
+      </el-menu>
     </div>
     <div class="person">
-<!--      <img :src="require('@/assets/image/bilibili.png')" alt="avatar"/>-->
-      <el-button style="margin: 10px" type="primary" @click="toLogin">登录</el-button>
+      <el-button style="margin: 10px" type="primary" @click="toLogin">登录/注册</el-button>
     </div>
   </header>
 </template>
 <script>
+
 export default {
   name: "Header",
+  data() {
+    return {
+      activeIndex: localStorage.getItem("activeIndex") ? localStorage.getItem("activeIndex") : "1"
+    }
+  },
   methods: {
     toLogin() {
       this.$router.push("/login");
+    },
+    handleSelect(key, keyPath) {
+      let path = this.$route.path;
+      if (key === "1") {
+        if (path !== "/index") {
+          localStorage.setItem("activeIndex", "1");
+          this.$router.push("/index");
+        }
+      } else if (key === "2") {
+        if (path !== "/job-hunt") {
+          localStorage.setItem("activeIndex", "2");
+          this.$router.push("/job-hunt");
+        }
+      } else {
+        if (path !== "/resume") {
+          localStorage.setItem("activeIndex", "3");
+          this.$router.push("/resume");
+        }
+      }
     }
   }
 }
@@ -24,7 +53,6 @@ header {
   position: sticky;
   top: 0;
   height: 60px;
-  box-shadow: 0 2px 2px 0 rgba(0,0,0,.1);
   background-color: #fff;
   z-index: 100;
   display: flex;
@@ -32,27 +60,13 @@ header {
   justify-content: space-between;
 }
 
-.title {
-  font: 30px/60px Consolas,Sans-serif;
-}
-
 .person {
-  width: 80px;
   height: 60px;
   position: relative;
   z-index: 2;
 }
 
-.person>img {
-  margin: 5px 0;
-  height: 50px;
-  border-radius: 50%;
-  box-shadow: 0 2px 5px #8c939d;
-  cursor: pointer;
-  transition: 0.3s;
-
-  &:hover {
-    transform: translateY(30px) scale(1.8);
-  }
+.el-menu.el-menu--horizontal {
+  border-bottom: none !important;
 }
 </style>
